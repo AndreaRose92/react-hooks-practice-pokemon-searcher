@@ -1,19 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PokemonCollection from "./PokemonCollection";
 import PokemonForm from "./PokemonForm";
 import Search from "./Search";
 import { Container } from "semantic-ui-react";
 
 function PokemonPage() {
+  const url = 'http://localhost:3001/pokemon'
+  const [pokemonArray, setPokemonArray] = useState([])
+  const [query, setQuery] = useState('')
+
+  useEffect(()=>{
+    fetch(`${url}`).then(r=>r.json()).then(pokemon=>setPokemonArray(pokemon))}, [])
+
+    const handleSearch = queryData => {setQuery(queryData)}
+
+    function submitNewPokemon(newPokemon) {
+      setPokemonArray([newPokemon, ...pokemonArray])
+    }
+
+    const searchedPokemon = pokemonArray.filter(pokemon => {
+      return pokemon.name.toLowerCase().includes(query.toLowerCase())
+    })
+
+
   return (
     <Container>
       <h1>Pokemon Searcher</h1>
       <br />
-      <PokemonForm />
+      <PokemonForm pokeSubmit={submitNewPokemon} />
       <br />
-      <Search />
+      <Search pokeSearch={handleSearch} />
       <br />
-      <PokemonCollection />
+      <PokemonCollection pokeData={searchedPokemon} />
     </Container>
   );
 }
