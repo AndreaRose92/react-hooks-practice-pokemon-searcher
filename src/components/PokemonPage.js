@@ -20,7 +20,7 @@ function PokemonPage() {
 
     const searchedPokemon = pokemonArray.filter(pokemon => {
       return pokemon.name.toLowerCase().includes(query.toLowerCase())
-    })
+    }).sort(function (a,b) { if (a.id<b.id) {return -1}; if (a.id>b.id) {return 1}; return 0})
 
 
   return (
